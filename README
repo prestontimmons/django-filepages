@@ -1,0 +1,21 @@
+filepages
+=========
+
+Renders django templates from the filesystem based
+on request.
+
+
+Sample
+
+Installation
+============
+
+Add ``filepages`` to your INSTALLED_APPS and add a line like
+this to your urls.py file:
+
+    urlpatterns = patterns('filepages.views',
+        url(r'^samples[/]*(?P<file_path>[^\.]*)/$', 'page',
+            dict(base_directory_list=["samples/filepages", ])),
+    )
+
+See the test cases for more information.
