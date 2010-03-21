@@ -4,9 +4,6 @@ filepages
 Renders django templates from the filesystem based
 on request.
 
-
-Sample
-
 Installation
 ============
 
