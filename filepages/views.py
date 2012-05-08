@@ -1,44 +1,49 @@
-import os
+from os.path import basename, join
 
-from django.conf import settings
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, Http404
-from django.template import loader, RequestContext, TemplateDoesNotExist
+from django.http import Http404
+
+from django.template import TemplateDoesNotExist
+from django.template.loader import select_template
+from django.template.response import TemplateResponse
 
 
-def file_should_be_ignored(file_path):
-
+def is_safe(file_path):
     try:
         file_path.encode("ascii")
     except UnicodeEncodeError:
-        return True
+        return False
 
-    return os.path.basename(file_path).startswith("_") or \
-        os.path.basename(file_path).startswith("base") or \
-        'includes' in file_path
+    base_name = basename(file_path)
+    return not any((
+        base_name.startswith("_"),
+        base_name.startswith("base"),
+        ".." in file_path,
+        "includes" in file_path,
+    ))
 
 
-def page(request, base_directory_list, file_path):
+def page(request, file_path, directory=None, templates_dir=None):
+    file_path = file_path or "index"
+    file_path = file_path.strip("/")
 
-    if file_should_be_ignored(file_path):
+    if not is_safe(file_path):
         raise Http404
 
-    if file_path == "":
-        file_path = "index"
+    directory = directory or templates_dir
+    if isinstance(directory, basestring):
+        directory = [directory]
 
     directories = []
-    for directory in base_directory_list:
+    for directory in directory:
         directories.extend([
-            "%s/index.html" % os.path.join(directory, file_path),
-            "%s.html" % os.path.join(directory, file_path),
+            "%s/index.html" % join(directory, file_path),
+            "%s.html" % join(directory, file_path),
         ])
 
     try:
-        t = loader.select_template(directories)
+        template = select_template(directories)
     except TemplateDoesNotExist:
-        message = ''
-        if settings.DEBUG:
-            message = "Could not find templates %s" % directories
+        message = "File page not found. Looked in: %s" % directories
         raise Http404(message)
 
-    return HttpResponse(t.render(RequestContext(request)))
+    return TemplateResponse(request, template)
