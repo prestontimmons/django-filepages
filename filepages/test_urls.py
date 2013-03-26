@@ -1,5 +1,6 @@
-from django.conf.urls.defaults import *
+from django.conf.urls import patterns, url
 
+from .urls import filepages_urlpatterns
 from .views import page
 
 
@@ -11,11 +12,8 @@ urlpatterns = patterns("",
             directory="filepages",
         ),
     ),
-    url(
-        regex=r"^(?P<file_path>.*)$",
-        view=page,
-        kwargs=dict(
-            templates_dir=["filepages", "other/filepages"],
-        ),
-    ),
+)
+
+urlpatterns += filepages_urlpatterns(
+    directory=["filepages", "other/filepages"],
 )
