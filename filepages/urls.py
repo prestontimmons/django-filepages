@@ -5,7 +5,7 @@ from .views import page
 
 def filepages_urlpatterns(directory, name=None):
     args = dict(
-        regex=r"^(?P<file_path>.*)$",
+        regex=r"^(?P<file_path>.*)/$",
         view=page,
         kwargs=dict(
             directory=directory,
