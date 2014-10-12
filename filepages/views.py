@@ -42,8 +42,8 @@ def page(request, file_path, directory=None, templates_dir=None):
 
     try:
         template = select_template(directories)
-    except TemplateDoesNotExist:
-        message = "File page not found. Looked in: %s" % directories
+    except TemplateDoesNotExist as e:
+        message = "File page not found or bad include line in template. Looked in: %s" % directories
         raise Http404(message)
 
     return TemplateResponse(request, template)
