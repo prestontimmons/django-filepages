@@ -15,6 +15,4 @@ def filepages_urlpatterns(directory, name=None):
     if name:
         args["name"] = name
 
-    return patterns("",
-        url(**args),
-    )
+    return patterns("", url(**args))
