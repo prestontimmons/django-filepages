@@ -7,6 +7,12 @@ from django.template.loader import select_template
 from django.template.response import TemplateResponse
 
 
+try:
+    str_type = base_string  # PY2
+except NameError:
+    str_type = str
+
+
 def is_safe(file_path):
     try:
         file_path.encode("ascii")
@@ -30,7 +36,7 @@ def page(request, file_path, directory=None, templates_dir=None):
         raise Http404
 
     directory = directory or templates_dir
-    if isinstance(directory, basestring):
+    if isinstance(directory, str_type):
         directory = [directory]
 
     directories = []
