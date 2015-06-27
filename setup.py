@@ -11,7 +11,7 @@ https://github.com/prestontimmons/django-filepages
 
 setup(
     name="django-filepages",
-    version="1.1.0",
+    version="2.0.0",
     author="Preston Timmons",
     author_email="prestontimmons@gmail.com",
     url="https://github.com/prestontimmons/django-filepages",
